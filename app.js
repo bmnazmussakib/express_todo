@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const router = require('./src/routes/api')
+const mongoose = require('mongoose');
 
 
 // Security Middleware Import
@@ -12,6 +13,7 @@ const hpp = require('hpp')
 
 
 // Security Middleware Implementation
+app.use(express.json());
 // app.use(cors())
 // app.use(rateLimit())
 // app.use(helmet())
@@ -30,6 +32,27 @@ const hpp = require('hpp')
 
 // // Apply the rate limiting middleware to all requests.
 // app.use(limiter)
+
+
+
+// MongoDB Connection
+const URI = "mongodb://127.0.0.1:27017/Todo"
+const options = {
+  user: "",
+  pass: "",
+  autoIndex: true
+}
+
+const connectDB = async (req, res) => {
+  try {
+    await mongoose.connect(URI, options)
+    console.log("DB Connected Successfully")
+  } catch (error) {
+    console.log("DB Connection Failed")
+  }
+}
+
+connectDB()
 
 
 
