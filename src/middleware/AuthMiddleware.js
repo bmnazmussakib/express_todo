@@ -6,20 +6,21 @@ module.exports = async (req, res, next) => {
     const secretKey = "secret-123";
 
     if (!token) {
-      res.status(401).json({
+      return res.status(401).json({
         status: "Failed",
         message: "Token not found",
       });
     }
 
-    const decoded = jwt.verify(token, secretKey)
-    next()
+    const decoded = jwt.verify(token, secretKey);
+    const username = decoded.data.username;
+    req.headers.username = username;
+    next();
 
-    await jwt.verify(token, secretKey);
   } catch (error) {
-    res.status(401).json({
-        status: "Failed",
-        message: "Invalid or Expired token",
-      });
+    return res.status(401).json({
+      status: "Failed",
+      message: "Invalid or Expired token",
+    });
   }
 };

@@ -38,8 +38,10 @@ exports.GetProfile = async (req, res) => {
 // Update
 exports.UpdateProfile = async (req, res) => {
   try {
+    let username = req.headers.username;
     let id = req.params.id;
-    let Query = { _id: id };
+
+    let Query = { username: username };
     let reqBody = req.body;
     const data = await ProfileModel.findOneAndUpdate(Query, reqBody, {
       new: true,
@@ -90,23 +92,23 @@ exports.UserLogin = async (req, res) => {
       }
 
 
-      if (user?.length > 0) {
+      // if (user?.length > 0) {
         
-          // ✅ Create token only if user is found
-          const payload = {
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
-            data: user,
-          };
-      
-          const secretKey = "secret-123";
-          const token = jwt.sign(payload, secretKey);
-      
-          res.status(200).json({
-            status: "success",
-            token: token,
-            data: user,
-          });
-      }
+      // }
+      // ✅ Create token only if user is found
+      const payload = {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        data: user,
+      };
+  
+      const secretKey = "secret-123";
+      const token = jwt.sign(payload, secretKey);
+  
+      res.status(200).json({
+        status: "success",
+        token: token,
+        data: user,
+      });
   
   
     } catch (error) {
@@ -122,10 +124,10 @@ exports.UserLogin = async (req, res) => {
 //   Select Profile
 exports.SelectProfile = async (req, res) => {
     try {
-        const username = ""
-        const Query = {}
+        const username = req.headers.username
+        const Query = {username: username}
         const user = await ProfileModel.find(Query)
-        res.status(201).json({
+        res.status(200).json({
             status: "success",
             data: user
         })
